@@ -5,6 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Εγγραφή Χρήστη - Erasmus Web App</title>
     <link rel="stylesheet" href="styles/sign-up.css">
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const formData = {
+                first_name: document.getElementById("first_name").value,
+                last_name: document.getElementById("last_name").value,
+                student_id: document.getElementById("student_id").value,
+                phone: document.getElementById("phone").value,
+                email: document.getElementById("email").value,
+                username: document.getElementById("username").value,
+                password: document.getElementById("password").value,
+                confirm_password: document.getElementById("confirm_password").value
+            };
+
+            const res = await fetch('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            const msg = await res.text();
+            alert(msg);
+        });
+    });
+</script>
 </head>
 <body>
     <header>
