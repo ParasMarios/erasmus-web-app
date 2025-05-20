@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+header {
+    background-color: #0077b6;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+nav {
+    background-color: #023e8a;
+    padding: 0.5rem;
+    text-align: center;
+}
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 1rem;
+}
+nav a:hover {
+    text-decoration: underline;
+}
+.content {
+    padding: 2rem;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+}
+th, td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    text-align: left;
+}
+form label {
+    display: block;
+    margin-top: 1rem;
+}
+form input, form select {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.3rem;
+}
+.form-section {
+    margin-top: 2rem;
+}

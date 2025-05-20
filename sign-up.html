@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Εγγραφή Χρήστη - Erasmus Web App</title>
+    <link rel="stylesheet" href="styles/sign-up.css">
+</head>
+<body>
+    <header>
+        <h1>Φόρμα Εγγραφής Χρήστη</h1>
+    </header>
+    <nav>
+        <a href="login.html">Είσοδος</a>
+        <a href="more.html">Πληροφορίες</a>
+        <a href="reqs.html">Απαιτήσεις</a>
+    </nav>
+    <div class="content">
+        <h2 style="text-align: center; color: #0077b6;">Εγγραφή στην Erasmus Web App</h2>
+        <form style="max-width: 500px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <label for="first_name">Όνομα:</label>
+            <input type="text" id="first_name" name="first_name" placeholder="Εισάγετε το όνομά σας" required>
+
+            <label for="last_name">Επίθετο:</label>
+            <input type="text" id="last_name" name="last_name" placeholder="Εισάγετε το επίθετό σας" required>
+
+            <label for="student_id">Αριθμός Μητρώου:</label>
+            <input type="text" id="student_id" name="student_id" placeholder="Εισάγετε τον αριθμό μητρώου" required>
+
+            <label for="phone">Τηλέφωνο:</label>
+            <input type="tel" id="phone" name="phone" placeholder="Εισάγετε το τηλέφωνό σας" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Εισάγετε το email σας" required>
+
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="Δημιουργήστε όνομα χρήστη" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Δημιουργήστε κωδικό" required>
+
+            <label for="confirm_password">Confirm Password:</label>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Επαλήθευση κωδικού" required>
+
+            <button type="submit" class="submit-btn" style="width: 100%; border-radius: 4px;">Εγγραφή</button>
+        </form>
+    </div>
+</body>
+</html>

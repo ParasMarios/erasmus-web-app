@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Αίτηση Μετακίνησης - Erasmus Web App</title>
+    <link rel="stylesheet" href="styles/application.css">
+</head>
+<body>
+    <header>
+        <h1>Φόρμα Αίτησης Μετακίνησης Erasmus</h1>
+    </header>
+    <nav>
+        <a href="index.html">Αρχική</a>
+        <a href="more.html">Πληροφορίες</a>
+        <a href="reqs.html">Απαιτήσεις</a>
+    </nav>
+    <div class="content">
+        <h2>Συμπληρώστε την αίτηση μετακίνησης</h2>
+        <form>
+            <div class="form-section">
+                <label for="first_name">Όνομα:</label>
+                <input type="text" id="first_name" name="first_name" placeholder="Εισάγετε το όνομά σας">
+            </div>
+
+            <div class="form-section">
+                <label for="last_name">Επίθετο:</label>
+                <input type="text" id="last_name" name="last_name" placeholder="Εισάγετε το επίθετό σας">
+            </div>
+
+            <div class="form-section">
+                <label for="student_id">Αριθμός Μητρώου:</label>
+                <input type="text" id="student_id" name="student_id" placeholder="Εισάγετε τον αριθμό μητρώου">
+            </div>
+
+            <div class="form-section">
+                <label for="passed_percentage">Ποσοστό περασμένων μαθημάτων (%):</label>
+                <input type="number" id="passed_percentage" min="0" max="100" name="passed_percentage" placeholder="π.χ. 75">
+            </div>
+
+            <div class="form-section">
+                <label for="average">Μέσος Όρος:</label>
+                <input type="number" id="average" step="0.01" name="average" placeholder="π.χ. 8.5">
+            </div>
+
+            <div class="form-section">
+                <label>Πιστοποιητικό Αγγλικής Γλώσσας:</label>
+                <div>
+                    <label><input type="radio" name="english" value="A1"> A1</label>
+                    <label><input type="radio" name="english" value="A2"> A2</label>
+                    <label><input type="radio" name="english" value="B1"> B1</label>
+                    <label><input type="radio" name="english" value="B2"> B2</label>
+                    <label><input type="radio" name="english" value="C1"> C1</label>
+                    <label><input type="radio" name="english" value="C2"> C2</label>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <label>Γνώση επιπλέον ξένων γλωσσών:</label>
+                <div>
+                    <label><input type="radio" name="other_lang" value="yes"> ΝΑΙ</label>
+                    <label><input type="radio" name="other_lang" value="no"> ΟΧΙ</label>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <label>Επιλογή Πανεπιστημίων:</label>
+                <select name="uni1">
+                    <option>Πανεπιστήμιο Α</option>
+                    <option>Πανεπιστήμιο Β</option>
+                    <option>Πανεπιστήμιο Γ</option>
+                </select>
+                <select name="uni2">
+                    <option>Πανεπιστήμιο Α</option>
+                    <option>Πανεπιστήμιο Β</option>
+                    <option>Πανεπιστήμιο Γ</option>
+                </select>
+                <select name="uni3">
+                    <option>Πανεπιστήμιο Α</option>
+                    <option>Πανεπιστήμιο Β</option>
+                    <option>Πανεπιστήμιο Γ</option>
+                </select>
+            </div>
+
+            <div class="form-section">
+                <label for="grades">Αναλυτική Βαθμολογία:</label>
+                <input type="file" id="grades" name="grades">
+            </div>
+
+            <div class="form-section">
+                <label for="english_certificate">Πτυχίο Αγγλικής Γλώσσας:</label>
+                <input type="file" id="english_certificate" name="english_certificate">
+            </div>
+
+            <div class="form-section">
+                <label for="other_certificates">Πτυχία Άλλων Γλωσσών:</label>
+                <input type="file" id="other_certificates" name="other_certificates" multiple>
+            </div>
+
+            <div class="form-section">
+                <label>
+                    <input type="checkbox" name="terms"> Αποδοχή των όρων
+                </label>
+            </div>
+
+            <button type="submit" class="submit-btn">Υποβολή Αίτησης</button>
+        </form>
+    </div>
+</body>
+</html>
