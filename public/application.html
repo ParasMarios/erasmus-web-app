@@ -19,37 +19,37 @@
     </nav>
     <div class="content">
         <h2>Συμπληρώστε την αίτηση μετακίνησης</h2>
-        <form>
+        <form id="applicationForm">
             <div class="form-section">
-                <label for="first_name">Όνομα:</label>
-                <input type="text" id="first_name" name="first_name" readonly>
+                <label for="first_name">Όνομα: <span style="color:red">*</span></label>
+                <input type="text" id="first_name" name="first_name" readonly required>
             </div>
 
             <div class="form-section">
-                <label for="last_name">Επίθετο:</label>
-                <input type="text" id="last_name" name="last_name" readonly>
+                <label for="last_name">Επίθετο: <span style="color:red">*</span></label>
+                <input type="text" id="last_name" name="last_name" readonly required>
             </div>
 
             <div class="form-section">
-                <label for="student_id">Αριθμός Μητρώου:</label>
-                <input type="text" id="student_id" name="student_id" readonly>
+                <label for="student_id">Αριθμός Μητρώου: <span style="color:red">*</span></label>
+                <input type="text" id="student_id" name="student_id" readonly required>
             </div>
 
             <div class="form-section">
-                <label for="passed_percentage">Ποσοστό περασμένων μαθημάτων (%):</label>
-                <input type="number" id="passed_percentage" min="0" max="100" name="passed_percentage"
-                    placeholder="π.χ. 75">
+                <label for="passed_percentage">Ποσοστό περασμένων μαθημάτων (%): <span
+                        style="color:red">*</span></label>
+                <input type="number" id="passed_percentage" min="0" max="100" name="passed_percentage" required>
             </div>
 
             <div class="form-section">
-                <label for="average">Μέσος Όρος:</label>
-                <input type="number" id="average" step="0.01" name="average" placeholder="π.χ. 8.5">
+                <label for="average">Μέσος Όρος: <span style="color:red">*</span></label>
+                <input type="number" id="average" step="0.01" name="average" required>
             </div>
 
             <div class="form-section">
-                <label>Πιστοποιητικό Αγγλικής Γλώσσας:</label>
+                <label>Πιστοποιητικό Αγγλικής Γλώσσας: <span style="color:red">*</span></label>
                 <div>
-                    <label><input type="radio" name="english" value="A1"> A1</label>
+                    <label><input type="radio" name="english" value="A1" required> A1</label>
                     <label><input type="radio" name="english" value="A2"> A2</label>
                     <label><input type="radio" name="english" value="B1"> B1</label>
                     <label><input type="radio" name="english" value="B2"> B2</label>
@@ -67,18 +67,21 @@
             </div>
 
             <div class="form-section">
-                <label>Επιλογή Πανεπιστημίων:</label>
-                <select name="uni1">
+                <label>Επιλογή Πανεπιστημίων: <span style="color:red">*</span></label>
+                <select name="uni1" required>
+                    <option value="">Επιλέξτε</option>
                     <option>Πανεπιστήμιο Α</option>
                     <option>Πανεπιστήμιο Β</option>
                     <option>Πανεπιστήμιο Γ</option>
                 </select>
-                <select name="uni2">
+                <select name="uni2" required>
+                    <option value="">Επιλέξτε</option>
                     <option>Πανεπιστήμιο Α</option>
                     <option>Πανεπιστήμιο Β</option>
                     <option>Πανεπιστήμιο Γ</option>
                 </select>
-                <select name="uni3">
+                <select name="uni3" required>
+                    <option value="">Επιλέξτε</option>
                     <option>Πανεπιστήμιο Α</option>
                     <option>Πανεπιστήμιο Β</option>
                     <option>Πανεπιστήμιο Γ</option>
@@ -86,13 +89,13 @@
             </div>
 
             <div class="form-section">
-                <label for="grades">Αναλυτική Βαθμολογία:</label>
-                <input type="file" id="grades" name="grades">
+                <label for="grades">Αναλυτική Βαθμολογία: <span style="color:red">*</span></label>
+                <input type="file" id="grades" name="grades" required>
             </div>
 
             <div class="form-section">
-                <label for="english_certificate">Πτυχίο Αγγλικής Γλώσσας:</label>
-                <input type="file" id="english_certificate" name="english_certificate">
+                <label for="english_certificate">Πτυχίο Αγγλικής Γλώσσας: <span style="color:red">*</span></label>
+                <input type="file" id="english_certificate" name="english_certificate" required>
             </div>
 
             <div class="form-section">
@@ -102,17 +105,21 @@
 
             <div class="form-section">
                 <label>
-                    <input type="checkbox" name="terms"> Αποδοχή των όρων
+                    <input type="checkbox" name="terms" required> Αποδοχή των όρων <span style="color:red">*</span>
                 </label>
             </div>
 
+            <p style="color: red; font-style: italic; margin-top: 1rem;">
+                * Υποχρεωτικά πεδία
+            </p>
+
             <button type="submit" class="submit-btn">Υποβολή Αίτησης</button>
         </form>
+
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
             const username = localStorage.getItem("username");
-
             if (!username) {
                 alert("Δεν βρέθηκε σύνδεση χρήστη. Μεταφορά στην είσοδο.");
                 window.location.href = "login.html";
@@ -138,11 +145,16 @@
                 console.error("Σφάλμα fetch:", err);
             }
 
-            // Αυτόματος υπολογισμός ποσοστού
-            const percentDisplay = document.getElementById("percentage_display");
+            // Έλεγχος υποχρεωτικών πεδίων
+            document.getElementById("applicationForm").addEventListener("submit", function (e) {
+                if (!this.checkValidity()) {
+                    e.preventDefault();
+                    alert("Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία.");
+                }
+            });
         });
-
     </script>
+
 </body>
 
 </html>
