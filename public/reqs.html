@@ -1,11 +1,50 @@
 <!DOCTYPE html>
 <html lang="el">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ελάχιστες Απαιτήσεις - Erasmus Web App</title>
     <link rel="stylesheet" href="styles/reqs.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelector('form').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const year = parseInt(document.getElementById('year').value);
+                const passed = parseFloat(document.getElementById('passed').value);
+                const average = parseFloat(document.getElementById('average').value);
+                const english = document.querySelector('input[name="english"]:checked')?.value;
+
+                let messages = [];
+
+                if (isNaN(year) || year < 2) {
+                    messages.push("✖ Πρέπει να είστε τουλάχιστον στο 2ο έτος σπουδών.");
+                }
+
+                if (isNaN(passed) || passed < 70) {
+                    messages.push("✖ Το ποσοστό περασμένων μαθημάτων πρέπει να είναι τουλάχιστον 70%.");
+                }
+
+                if (isNaN(average) || average < 6.5) {
+                    messages.push("✖ Ο μέσος όρος πρέπει να είναι τουλάχιστον 6.50.");
+                }
+
+                if (!english || !["B2", "C1", "C2"].includes(english)) {
+                    messages.push("✖ Το επίπεδο Αγγλικών πρέπει να είναι τουλάχιστον B2.");
+                }
+
+                if (messages.length === 0) {
+                    alert("✅ Συγχαρητήρια! Πληροίτε τις ελάχιστες απαιτήσεις για συμμετοχή στο Erasmus.");
+                } else {
+                    alert("❌ Δεν πληροίτε τις απαιτήσεις:\n\n" + messages.join("\n"));
+                }
+            });
+        });
+    </script>
+
 </head>
+
 <body>
     <header>
         <h1>Ελάχιστες Απαιτήσεις για Συμμετοχή στο Erasmus</h1>
@@ -17,7 +56,8 @@
         <a href="more.html">Πληροφορίες</a>
     </nav>
     <div class="content">
-        <p>Για να μπορέσει ένας φοιτητής ή μία φοιτήτρια να συμμετάσχει στο πρόγραμμα Erasmus, θα πρέπει να πληροί τις παρακάτω κατ’ ελάχιστον απαιτήσεις:</p>
+        <p>Για να μπορέσει ένας φοιτητής ή μία φοιτήτρια να συμμετάσχει στο πρόγραμμα Erasmus, θα πρέπει να πληροί τις
+            παρακάτω κατ’ ελάχιστον απαιτήσεις:</p>
 
         <table>
             <thead>
@@ -49,63 +89,69 @@
         <div class="form-section">
             <h2>Φόρμα Γρήγορου Ελέγχου</h2>
             <form>
-            <label for="year">Τρέχον έτος σπουδών:</label>
-            <select id="year" name="year">
-                <option value="1">1ο</option>
-                <option value="2">2ο</option>
-                <option value="3">3ο</option>
-                <option value="4">4ο</option>
-                <option value="5">Μεγαλύτερο</option>
-            </select>
+                <label for="year">Τρέχον έτος σπουδών:</label>
+                <select id="year" name="year">
+                    <option value="1">1ο</option>
+                    <option value="2">2ο</option>
+                    <option value="3">3ο</option>
+                    <option value="4">4ο</option>
+                    <option value="5">Μεγαλύτερο</option>
+                </select>
 
-            <label for="passed">Ποσοστό περασμένων μαθημάτων (%):</label>
-            <input type="number" id="passed" name="passed" min="0" max="100" placeholder="π.χ. 75">
+                <label for="passed">Ποσοστό περασμένων μαθημάτων (%):</label>
+                <input type="number" id="passed" name="passed" min="0" max="100" placeholder="π.χ. 75">
 
-            <label for="average">Μέσος Όρος:</label>
-            <input type="number" id="average" name="average" step="0.01" placeholder="π.χ. 6.50">
+                <label for="average">Μέσος Όρος:</label>
+                <input type="number" id="average" name="average" step="0.01" placeholder="π.χ. 6.50">
 
-            <label>Πιστοποιητικό Αγγλικής Γλώσσας:</label>
-            <div class="radio-group">
-                <label><input type="radio" name="english" value="A1"> A1</label>
-                <label><input type="radio" name="english" value="A2"> A2</label>
-                <label><input type="radio" name="english" value="B1"> B1</label>
-                <label><input type="radio" name="english" value="B2"> B2</label>
-                <label><input type="radio" name="english" value="C1"> C1</label>
-                <label><input type="radio" name="english" value="C2"> C2</label>
-            </div>
+                <label>Πιστοποιητικό Αγγλικής Γλώσσας:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="english" value="A1"> A1</label>
+                    <label><input type="radio" name="english" value="A2"> A2</label>
+                    <label><input type="radio" name="english" value="B1"> B1</label>
+                    <label><input type="radio" name="english" value="B2"> B2</label>
+                    <label><input type="radio" name="english" value="C1"> C1</label>
+                    <label><input type="radio" name="english" value="C2"> C2</label>
+                </div>
 
-            <button type="submit" style="margin-top: 1rem; background-color: #0077b6; color: white; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer;">
-                Υποβολή
-            </button>
+                <button type="submit"
+                    style="margin-top: 1rem; background-color: #0077b6; color: white; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer;">
+                    Υποβολή
+                </button>
             </form>
         </div>
         <style>
             .form-section form {
-            background-color: #ffffff;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                background-color: #ffffff;
+                padding: 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             }
-            .form-section form input, 
+
+            .form-section form input,
             .form-section form select {
-            border: 1px solid #ccc;
-            border-radius: 4px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
             }
+
             .form-section form .radio-group label {
-            display: inline-block;
-            margin-right: 1rem;
+                display: inline-block;
+                margin-right: 1rem;
             }
+
             .form-section form button:hover {
-            background-color: #005f8a;
+                background-color: #005f8a;
             }
         </style>
 
         <div class="form-section">
             <h3>Ενημερωτικό Υλικό</h3>
             <p>Κατεβάστε το σχετικό αρχείο PDF με λεπτομέρειες για το πρόγραμμα:</p>
-            <a href="https://erasmus-plus.ec.europa.eu/sites/default/files/2023-11/2024-Erasmus%2BProgramme-Guide_EN.pdf" target="_blank">Λήψη Αρχείου PDF</a>
+            <a href="https://erasmus-plus.ec.europa.eu/sites/default/files/2023-11/2024-Erasmus%2BProgramme-Guide_EN.pdf"
+                target="_blank">Λήψη Αρχείου PDF</a>
             <br><br>
         </div>
     </div>
 </body>
+
 </html>

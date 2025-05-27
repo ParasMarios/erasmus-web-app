@@ -9,12 +9,11 @@ app.use(express.static("public")); // για να σερβίρει HTML/CSS/JS
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Π.χ. Route εγγραφής χρήστη
 app.post("/register", async (req, res) => {
   const {
     first_name,
     last_name,
-    personal_number,
+    student_id,
     phone,
     email,
     username,
@@ -34,12 +33,32 @@ app.post("/register", async (req, res) => {
     // Εισαγωγή νέου χρήστη
     await pool.query(
       "INSERT INTO users (name, lastname, personalnumber, phone, email, username, password) VALUES ($1,$2,$3,$4,$5,$6,$7)",
-      [first_name, last_name, personal_number, phone, email, username, password]
+      [first_name, last_name, student_id, phone, email, username, password]
     );
 
     res.status(200).send("Επιτυχής εγγραφή!");
   } catch (err) {
     console.error(err);
+    res.status(500).send("Σφάλμα διακομιστή.");
+  }
+});
+
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const result = await pool.query(
+      "SELECT * FROM users WHERE username = $1 AND password = $2",
+      [username, password]
+    );
+
+    if (result.rows.length > 0) {
+      res.status(200).send("Σύνδεση επιτυχής!");
+    } else {
+      res.status(401).send("Λάθος στοιχεία σύνδεσης.");
+    }
+  } catch (err) {
+    console.error("Σφάλμα σύνδεσης:", err);
     res.status(500).send("Σφάλμα διακομιστή.");
   }
 });
