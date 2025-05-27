@@ -30,6 +30,12 @@
 
                 const msg = await res.text();
                 alert(msg);
+
+                if (res.ok) {
+                    localStorage.setItem("username", formData.username);
+                    window.location.href = "application.html";
+                }
+
             });
         });
     </script>

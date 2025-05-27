@@ -63,6 +63,26 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.post("/user-info", async (req, res) => {
+  const { username } = req.body;
+
+  try {
+    const result = await pool.query(
+      "SELECT name, lastname, personalnumber FROM users WHERE username = $1",
+      [username]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).send("User not found");
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("Σφάλμα κατά την ανάκτηση στοιχείων:", err);
+    res.status(500).send("Σφάλμα διακομιστή");
+  }
+});
+
 // Ξεκινάμε τον server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

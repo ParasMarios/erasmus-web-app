@@ -24,8 +24,10 @@
                 alert(msg);
 
                 if (res.status === 200) {
+                    localStorage.setItem("username", document.getElementById("username").value);
                     window.location.href = 'application.html';
                 }
+
             });
         });
     </script>

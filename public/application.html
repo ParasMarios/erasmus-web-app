@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="el">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Αίτηση Μετακίνησης - Erasmus Web App</title>
     <link rel="stylesheet" href="styles/application.css">
 </head>
+
 <body>
     <header>
         <h1>Φόρμα Αίτησης Μετακίνησης Erasmus</h1>
@@ -20,22 +22,23 @@
         <form>
             <div class="form-section">
                 <label for="first_name">Όνομα:</label>
-                <input type="text" id="first_name" name="first_name" placeholder="Εισάγετε το όνομά σας">
+                <input type="text" id="first_name" name="first_name" readonly>
             </div>
 
             <div class="form-section">
                 <label for="last_name">Επίθετο:</label>
-                <input type="text" id="last_name" name="last_name" placeholder="Εισάγετε το επίθετό σας">
+                <input type="text" id="last_name" name="last_name" readonly>
             </div>
 
             <div class="form-section">
                 <label for="student_id">Αριθμός Μητρώου:</label>
-                <input type="text" id="student_id" name="student_id" placeholder="Εισάγετε τον αριθμό μητρώου">
+                <input type="text" id="student_id" name="student_id" readonly>
             </div>
 
             <div class="form-section">
                 <label for="passed_percentage">Ποσοστό περασμένων μαθημάτων (%):</label>
-                <input type="number" id="passed_percentage" min="0" max="100" name="passed_percentage" placeholder="π.χ. 75">
+                <input type="number" id="passed_percentage" min="0" max="100" name="passed_percentage"
+                    placeholder="π.χ. 75">
             </div>
 
             <div class="form-section">
@@ -106,5 +109,40 @@
             <button type="submit" class="submit-btn">Υποβολή Αίτησης</button>
         </form>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            const username = localStorage.getItem("username");
+
+            if (!username) {
+                alert("Δεν βρέθηκε σύνδεση χρήστη. Μεταφορά στην είσοδο.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            try {
+                const res = await fetch("/user-info", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username }),
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById("first_name").value = data.name;
+                    document.getElementById("last_name").value = data.lastname;
+                    document.getElementById("student_id").value = data.personalnumber;
+                } else {
+                    alert("Αδυναμία φόρτωσης στοιχείων χρήστη.");
+                }
+            } catch (err) {
+                console.error("Σφάλμα fetch:", err);
+            }
+
+            // Αυτόματος υπολογισμός ποσοστού
+            const percentDisplay = document.getElementById("percentage_display");
+        });
+
+    </script>
 </body>
+
 </html>
