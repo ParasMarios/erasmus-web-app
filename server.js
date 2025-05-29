@@ -68,7 +68,8 @@ app.post("/user-info", async (req, res) => {
 
   try {
     const result = await pool.query(
-      "SELECT name, lastname, personalnumber FROM users WHERE username = $1",
+      `SELECT name, lastname, personalnumber, phone, email, password
+       FROM users WHERE username = $1`,
       [username]
     );
 
@@ -92,6 +93,53 @@ app.get("/universities", async (req, res) => {
   } catch (err) {
     console.error("Σφάλμα κατά την ανάκτηση πανεπιστημίων:", err);
     res.status(500).send("Σφάλμα διακομιστή.");
+  }
+});
+
+app.post("/update-profile", async (req, res) => {
+  const { username, name, lastname, personalnumber, phone, email, password } =
+    req.body;
+
+  try {
+    const result = await pool.query(
+      `UPDATE users 
+       SET name = $1, lastname = $2, personalnumber = $3, phone = $4, email = $5, password = $6 
+       WHERE username = $7`,
+      [name, lastname, personalnumber, phone, email, password, username]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).send("Ο χρήστης δεν βρέθηκε.");
+    }
+
+    res.status(200).send("Ενημερώθηκε επιτυχώς.");
+  } catch (err) {
+    console.error("Σφάλμα ενημέρωσης:", err);
+    res.status(500).send("Σφάλμα διακομιστή.");
+  }
+});
+
+app.get("/check-username", async (req, res) => {
+  const { username } = req.query;
+
+  if (!username) {
+    return res.status(400).json({ error: "Username is required" });
+  }
+
+  try {
+    const result = await pool.query(
+      "SELECT username FROM users WHERE username = $1",
+      [username]
+    );
+
+    if (result.rows.length > 0) {
+      res.json({ found: true });
+    } else {
+      res.json({ found: false });
+    }
+  } catch (err) {
+    console.error("Σφάλμα ελέγχου username:", err);
+    res.status(500).json({ error: "Σφάλμα διακομιστή" });
   }
 });
 

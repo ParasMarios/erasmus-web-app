@@ -6,39 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Εγγραφή Χρήστη - Erasmus Web App</title>
     <link rel="stylesheet" href="styles/sign-up.css">
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelector('form').addEventListener('submit', async function (e) {
-                e.preventDefault();
-
-                const formData = {
-                    first_name: document.getElementById("first_name").value,
-                    last_name: document.getElementById("last_name").value,
-                    student_id: document.getElementById("student_id").value,
-                    phone: document.getElementById("phone").value,
-                    email: document.getElementById("email").value,
-                    username: document.getElementById("username").value,
-                    password: document.getElementById("password").value,
-                    confirm_password: document.getElementById("confirm_password").value
-                };
-
-                const res = await fetch('/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-
-                const msg = await res.text();
-                alert(msg);
-
-                if (res.ok) {
-                    localStorage.setItem("username", formData.username);
-                    window.location.href = "application.html";
-                }
-
-            });
-        });
-    </script>
 </head>
 
 <body>
@@ -81,6 +48,116 @@
 
             <button type="submit" class="submit-btn" style="width: 100%; border-radius: 4px;">Εγγραφή</button>
         </form>
+        <script>
+            document.querySelector('form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                // Get form values
+                const firstName = document.getElementById("first_name").value.trim();
+                const lastName = document.getElementById("last_name").value.trim();
+                const studentId = document.getElementById("student_id").value.trim();
+                const phone = document.getElementById("phone").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const username = document.getElementById("username").value.trim();
+                const password = document.getElementById("password").value;
+                const confirmPassword = document.getElementById("confirm_password").value;
+
+                //Όνομα: Δεν επιτρέπονται ψηφία
+                if (/\d/.test(firstName)) {
+                    alert("Το όνομα δεν πρέπει να περιέχει ψηφία.");
+                    document.getElementById("first_name").focus();
+                    return;
+                }
+
+                //Επίθετο: Δεν επιτρέπονται ψηφία
+                if (/\d/.test(lastName)) {
+                    alert("Το επίθετο δεν πρέπει να περιέχει ψηφία.");
+                    document.getElementById("last_name").focus();
+                    return;
+                }
+
+                //Αριθμός Μητρώου: 13 ψηφία, ξεκινάει με 2022
+                if (!/^\d{13}$/.test(studentId)) {
+                    alert("Ο αριθμός μητρώου πρέπει να αποτελείται από 13 ψηφία.");
+                    document.getElementById("student_id").focus();
+                    return;
+                }
+                if (!studentId.startsWith("2022")) {
+                    alert("Ο αριθμός μητρώου πρέπει να ξεκινάει με 2022.");
+                    document.getElementById("student_id").focus();
+                    return;
+                }
+
+                //Τηλέφωνο: 10 ψηφία
+                if (!/^\d{10}$/.test(phone)) {
+                    alert("Το τηλέφωνο πρέπει να αποτελείται από 10 ψηφία.");
+                    document.getElementById("phone").focus();
+                    return;
+                }
+
+                //Email: Βασικός έλεγχος μορφής email
+                if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email)) {
+                    alert("Παρακαλώ εισάγετε έγκυρο email.");
+                    document.getElementById("email").focus();
+                    return;
+                }
+
+                //Username: Έλεγχος αν υπάρχει ήδη
+                const usernameExists = await fetch('/check-username?username=' + encodeURIComponent(username));
+                if (usernameExists.ok) {
+                    const exists = await usernameExists.json();
+                    if (exists.found) {
+                        alert("Το username υπάρχει ήδη. Παρακαλώ επιλέξτε άλλο.");
+                        document.getElementById("username").focus();
+                        return;
+                    }
+                }
+
+                //Password: Τουλάχιστον 5 χαρακτήρες και τουλάχιστον ένα σύμβολο
+                if (password.length < 5) {
+                    alert("Ο κωδικός πρέπει να έχει τουλάχιστον 5 χαρακτήρες.");
+                    document.getElementById("password").focus();
+                    return;
+                }
+                if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+                    alert("Ο κωδικός πρέπει να περιέχει τουλάχιστον ένα σύμβολο.");
+                    document.getElementById("password").focus();
+                    return;
+                }
+
+                //Confirm password: Ίδιο με password
+                if (password !== confirmPassword) {
+                    alert("Οι κωδικοί δεν ταιριάζουν.");
+                    document.getElementById("confirm_password").focus();
+                    return;
+                }
+
+                const formData = {
+                    first_name: firstName,
+                    last_name: lastName,
+                    student_id: studentId,
+                    phone: phone,
+                    email: email,
+                    username: username,
+                    password: password,
+                    confirm_password: confirmPassword
+                };
+
+                const res = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const msg = await res.text();
+                alert(msg);
+
+                if (res.ok) {
+                    localStorage.setItem("username", formData.username);
+                    window.location.href = "application.html";
+                }
+            });
+        </script>
     </div>
 </body>
 

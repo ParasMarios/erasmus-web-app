@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="el">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Το Προφίλ μου</title>
+    <link rel="stylesheet" href="styles/profile.css">
+</head>
+
+<body>
+    <header>
+        <h1>Το Προφίλ μου</h1>
+    </header>
+    <nav>
+        <a href="application.html">Αίτηση</a>
+    </nav>
+    <div class="content"></div>
+    <h2 style="text-align: center; color: #023e8a;">Τα στοιχεία μου</h2>
+    <form id="profileForm"
+        style="background-color: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <label for="name" style="font-weight: bold;">Όνομα:</label>
+        <input type="text" name="name" id="name" style="border: 1px solid #ccc; border-radius: 4px;"><br>
+
+        <label for="lastname" style="font-weight: bold;">Επίθετο:</label>
+        <input type="text" name="lastname" id="lastname" style="border: 1px solid #ccc; border-radius: 4px;"><br>
+
+        <label for="personalnumber" style="font-weight: bold;">Αριθμός Μητρώου:</label>
+        <input type="text" name="personalnumber" id="personalnumber"
+            style="border: 1px solid #ccc; border-radius: 4px;"><br>
+
+        <label for="phone" style="font-weight: bold;">Τηλέφωνο:</label>
+        <input type="text" name="phone" id="phone" style="border: 1px solid #ccc; border-radius: 4px;"><br>
+
+        <label for="email" style="font-weight: bold;">Email:</label>
+        <input type="email" name="email" id="email" style="border: 1px solid #ccc; border-radius: 4px;"><br>
+
+        <label for="password" style="font-weight: bold;">Κωδικός:</label>
+        <input type="password" name="password" id="password" style="border: 1px solid #ccc; border-radius: 4px;">
+        <button type="button" id="togglePassword" style="margin-top: 0.5rem; border-radius: 4px;">Προβολή</button>
+        <br>
+
+        <label for="username" style="font-weight: bold;">Username:</label>
+        <input type="text" id="username" readonly disabled style="border: 1px solid #ccc; border-radius: 4px;"><br><br>
+
+        <button type="submit" class="submit-btn" style="border-radius: 4px; font-weight: bold;">Αποθήκευση
+            Αλλαγών</button>
+    </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const username = localStorage.getItem("username");
+            if (!username) {
+                alert("Δεν βρέθηκε σύνδεση. Μεταφορά στην είσοδο.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            document.getElementById("togglePassword").addEventListener("click", function () {
+                const passwordInput = document.getElementById("password");
+                const isHidden = passwordInput.type === "password";
+                passwordInput.type = isHidden ? "text" : "password";
+                this.textContent = isHidden ? "Απόκρυψη" : "Προβολή";
+            });
+
+            // Ανάκτηση στοιχείων
+            const res = await fetch("/user-info", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username })
+            });
+            const data = await res.json();
+
+            document.getElementById("name").value = data.name;
+            document.getElementById("lastname").value = data.lastname;
+            document.getElementById("personalnumber").value = data.personalnumber;
+            document.getElementById("phone").value = data.phone;
+            document.getElementById("email").value = data.email;
+            document.getElementById("password").value = data.password;
+            document.getElementById("username").value = username;
+
+            // Ελεγχος στοιχείων πριν αποθήκευση (όπως στο sign-up)
+            document.getElementById("profileForm").addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const name = document.getElementById("name").value.trim();
+                const lastname = document.getElementById("lastname").value.trim();
+                const personalnumber = document.getElementById("personalnumber").value.trim();
+                const phone = document.getElementById("phone").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("password").value;
+
+                // Όνομα: Δεν επιτρέπονται ψηφία
+                if (/\d/.test(name)) {
+                    alert("Το όνομα δεν πρέπει να περιέχει ψηφία.");
+                    document.getElementById("name").focus();
+                    return;
+                }
+
+                // Επίθετο: Δεν επιτρέπονται ψηφία
+                if (/\d/.test(lastname)) {
+                    alert("Το επίθετο δεν πρέπει να περιέχει ψηφία.");
+                    document.getElementById("lastname").focus();
+                    return;
+                }
+
+                // Αριθμός Μητρώου: 13 ψηφία, ξεκινάει με 2022
+                if (!/^\d{13}$/.test(personalnumber)) {
+                    alert("Ο αριθμός μητρώου πρέπει να αποτελείται από 13 ψηφία.");
+                    document.getElementById("personalnumber").focus();
+                    return;
+                }
+                if (!personalnumber.startsWith("2022")) {
+                    alert("Ο αριθμός μητρώου πρέπει να ξεκινάει με 2022.");
+                    document.getElementById("personalnumber").focus();
+                    return;
+                }
+
+                // Τηλέφωνο: 10 ψηφία
+                if (!/^\d{10}$/.test(phone)) {
+                    alert("Το τηλέφωνο πρέπει να αποτελείται από 10 ψηφία.");
+                    document.getElementById("phone").focus();
+                    return;
+                }
+
+                // Email: Βασικός έλεγχος μορφής email
+                if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email)) {
+                    alert("Παρακαλώ εισάγετε έγκυρο email.");
+                    document.getElementById("email").focus();
+                    return;
+                }
+
+                // Password: Τουλάχιστον 5 χαρακτήρες και τουλάχιστον ένα σύμβολο
+                if (password.length < 5) {
+                    alert("Ο κωδικός πρέπει να έχει τουλάχιστον 5 χαρακτήρες.");
+                    document.getElementById("password").focus();
+                    return;
+                }
+                if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+                    alert("Ο κωδικός πρέπει να περιέχει τουλάχιστον ένα σύμβολο.");
+                    document.getElementById("password").focus();
+                    return;
+                }
+
+                // Αποθήκευση αλλαγών
+                const updatedData = {
+                    username,
+                    name,
+                    lastname,
+                    personalnumber,
+                    phone,
+                    email,
+                    password
+                };
+
+                const saveRes = await fetch("/update-profile", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(updatedData)
+                });
+
+                if (saveRes.ok) {
+                    alert("Τα στοιχεία αποθηκεύτηκαν!");
+                } else {
+                    alert("Αποτυχία αποθήκευσης.");
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
