@@ -68,24 +68,9 @@
 
             <div class="form-section">
                 <label>Επιλογή Πανεπιστημίων: <span style="color:red">*</span></label>
-                <select name="uni1" required>
-                    <option value="">Επιλέξτε</option>
-                    <option>Πανεπιστήμιο Α</option>
-                    <option>Πανεπιστήμιο Β</option>
-                    <option>Πανεπιστήμιο Γ</option>
-                </select>
-                <select name="uni2" required>
-                    <option value="">Επιλέξτε</option>
-                    <option>Πανεπιστήμιο Α</option>
-                    <option>Πανεπιστήμιο Β</option>
-                    <option>Πανεπιστήμιο Γ</option>
-                </select>
-                <select name="uni3" required>
-                    <option value="">Επιλέξτε</option>
-                    <option>Πανεπιστήμιο Α</option>
-                    <option>Πανεπιστήμιο Β</option>
-                    <option>Πανεπιστήμιο Γ</option>
-                </select>
+                <select name="uni1" id="uni1" required></select>
+                <select name="uni2" id="uni2" required></select>
+                <select name="uni3" id="uni3" required></select>
             </div>
 
             <div class="form-section">
@@ -152,6 +137,33 @@
                     alert("Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία.");
                 }
             });
+
+            // Load university list dynamically
+            async function loadUniversities() {
+                try {
+                    const res = await fetch("/universities");
+                    if (!res.ok) throw new Error("HTTP error");
+
+                    const universities = await res.json();
+                    const selects = [document.getElementById("uni1"), document.getElementById("uni2"), document.getElementById("uni3")];
+
+                    for (const select of selects) {
+                        select.innerHTML = '<option value="">Επιλέξτε</option>';
+                        universities.forEach(u => {
+                            const opt = document.createElement("option");
+                            opt.value = u.id;
+                            opt.textContent = u.university_name;
+                            select.appendChild(opt);
+                        });
+                    }
+                } catch (err) {
+                    console.error("Σφάλμα φόρτωσης πανεπιστημίων:", err);
+                    alert("Αποτυχία φόρτωσης πανεπιστημίων.");
+                }
+            }
+
+            loadUniversities();
+
         });
     </script>
 

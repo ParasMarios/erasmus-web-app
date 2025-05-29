@@ -83,6 +83,18 @@ app.post("/user-info", async (req, res) => {
   }
 });
 
+app.get("/universities", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT id, university_name FROM universities ORDER BY university_name ASC"
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Σφάλμα κατά την ανάκτηση πανεπιστημίων:", err);
+    res.status(500).send("Σφάλμα διακομιστή.");
+  }
+});
+
 // Ξεκινάμε τον server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
