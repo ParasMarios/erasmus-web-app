@@ -66,7 +66,10 @@ app.post("/login", async (req, res) => {
     );
 
     if (result.rows.length > 0) {
-      res.status(200).send("Σύνδεση επιτυχής!");
+      const user = result.rows[0];
+      res
+        .status(200)
+        .json({ message: "Σύνδεση επιτυχής!", isAdmin: user.administrator });
     } else {
       res.status(401).send("Λάθος στοιχεία σύνδεσης.");
     }
@@ -188,6 +191,9 @@ app.post(
       const other_certificates_file =
         req.files["other_certificates"]?.map((f) => f.filename) || [];
 
+      console.log("BODY:", req.body);
+      console.log("FILES:", req.files);
+
       await pool.query(
         `
         INSERT INTO applications (
@@ -229,6 +235,54 @@ app.post(
     }
   }
 );
+
+app.get("/admin-applications", async (req, res) => {
+  const { min_percentage, university_id } = req.query;
+
+  let baseQuery = `
+    SELECT 
+      a.id, a.username, a.first_name, a.last_name, a.student_id,
+      a.passed_percentage, a.average, a.english_level, a.knows_other_languages,
+      u1.university_name AS uni1_name,
+      u2.university_name AS uni2_name,
+      u3.university_name AS uni3_name,
+      a.grades_file, a.english_certificate_file, a.other_certificates_file,
+      a.submitted_at
+    FROM applications a
+    LEFT JOIN universities u1 ON a.university_1_id = u1.id
+    LEFT JOIN universities u2 ON a.university_2_id = u2.id
+    LEFT JOIN universities u3 ON a.university_3_id = u3.id
+    WHERE 1=1
+  `;
+
+  const params = [];
+
+  if (min_percentage) {
+    baseQuery += ` AND a.passed_percentage >= $${params.length + 1}`;
+    params.push(min_percentage);
+  }
+
+  if (university_id) {
+    baseQuery += `
+    AND (
+      $${params.length + 1} = a.university_1_id OR
+      $${params.length + 1} = a.university_2_id OR
+      $${params.length + 1} = a.university_3_id
+    )
+  `;
+    params.push(university_id);
+  }
+
+  baseQuery += ` ORDER BY a.average DESC`;
+
+  try {
+    const result = await pool.query(baseQuery, params);
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Σφάλμα κατά την ανάκτηση αιτήσεων διαχειριστή:", err);
+    res.status(500).send("Αποτυχία λήψης δεδομένων αιτήσεων.");
+  }
+});
 
 // Ξεκινάμε τον server
 app.listen(PORT, () => {

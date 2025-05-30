@@ -20,13 +20,22 @@
                     body: JSON.stringify({ username, password })
                 });
 
-                const msg = await res.text();
-                alert(msg);
-
                 if (res.status === 200) {
-                    localStorage.setItem("username", document.getElementById("username").value);
-                    window.location.href = 'application.html';
+                    const result = await res.json();
+                    alert(result.message);
+                    localStorage.setItem("username", username);
+
+                    //Redirect based on admin status
+                    if (result.isAdmin) {
+                        window.location.href = 'admin.html';
+                    } else {
+                        window.location.href = 'application.html';
+                    }
+                } else {
+                    const errorMsg = await res.text();
+                    alert(errorMsg);
                 }
+
 
             });
         });

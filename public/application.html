@@ -20,7 +20,7 @@
     </nav>
     <div class="content">
         <h2>Συμπληρώστε την αίτηση μετακίνησης</h2>
-        <form id="applicationForm">
+        <form id="applicationForm" enctype="multipart/form-data">
             <div class="form-section">
                 <label for="first_name">Όνομα: <span style="color:red">*</span></label>
                 <input type="text" id="first_name" name="first_name" readonly required>
@@ -50,12 +50,12 @@
             <div class="form-section">
                 <label>Πιστοποιητικό Αγγλικής Γλώσσας: <span style="color:red">*</span></label>
                 <div>
-                    <label><input type="radio" name="english" value="A1" required> A1</label>
-                    <label><input type="radio" name="english" value="A2"> A2</label>
-                    <label><input type="radio" name="english" value="B1"> B1</label>
-                    <label><input type="radio" name="english" value="B2"> B2</label>
-                    <label><input type="radio" name="english" value="C1"> C1</label>
-                    <label><input type="radio" name="english" value="C2"> C2</label>
+                    <label><input type="radio" name="english_level" value="A1" required> A1</label>
+                    <label><input type="radio" name="english_level" value="A2"> A2</label>
+                    <label><input type="radio" name="english_level" value="B1"> B1</label>
+                    <label><input type="radio" name="english_level" value="B2"> B2</label>
+                    <label><input type="radio" name="english_level" value="C1"> C1</label>
+                    <label><input type="radio" name="english_level" value="C2"> C2</label>
                 </div>
             </div>
 
@@ -112,6 +112,7 @@
                 return;
             }
 
+            // Φόρτωση στοιχείων χρήστη
             try {
                 const res = await fetch("/user-info", {
                     method: "POST",
@@ -131,15 +132,39 @@
                 console.error("Σφάλμα fetch:", err);
             }
 
-            // Έλεγχος υποχρεωτικών πεδίων
-            document.getElementById("applicationForm").addEventListener("submit", function (e) {
-                if (!this.checkValidity()) {
-                    e.preventDefault();
-                    alert("Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία.");
+            // Υποβολή αίτησης
+            document.getElementById("applicationForm").addEventListener("submit", async function (e) {
+                e.preventDefault();
+
+                const form = document.getElementById("applicationForm");
+                const formData = new FormData(form);
+                formData.append("username", username);
+
+                // Συμπλήρωση με το επιλεγμένο επίπεδο αγγλικών (το radio input έχει name="english")
+                const english = form.querySelector('input[name="english"]:checked')?.value;
+                if (english) formData.append("english_level", english);
+
+                try {
+                    const res = await fetch("/submit-application", {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    if (res.ok) {
+                        alert("Η αίτηση υποβλήθηκε με επιτυχία!");
+                        window.location.href = "index.html";
+                    } else {
+                        const errMsg = await res.text();
+                        console.error("Αποτυχία υποβολής:", errMsg);
+                        alert("Αποτυχία υποβολής.");
+                    }
+                } catch (err) {
+                    console.error("Σφάλμα κατά την αποστολή:", err);
+                    alert("Σφάλμα κατά την υποβολή της αίτησης.");
                 }
             });
 
-            // Load university list dynamically
+            // Φόρτωση πανεπιστημίων
             async function loadUniversities() {
                 try {
                     const res = await fetch("/universities");
@@ -164,7 +189,6 @@
             }
 
             loadUniversities();
-
         });
     </script>
 

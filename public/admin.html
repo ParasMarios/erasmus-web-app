@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="el">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Αιτήσεις Φοιτητών - Διαχειριστής</title>
+    <link rel="stylesheet" href="styles/admin.css">
+</head>
+
+<body>
+    <h1>Λίστα Αιτήσεων Φοιτητών</h1>
+
+    <div class="filters">
+        <label>Ελάχιστο Ποσοστό Επιτυχίας: <input type="number" id="minPercentage" min="0" max="100" value="0"></label>
+        <label>Πανεπιστήμιο:
+            <select id="universityFilter">
+                <option value="">Όλα τα πανεπιστήμια</option>
+            </select>
+        </label>
+        <button onclick="loadApplications()">Εφαρμογή Φίλτρων</button>
+    </div>
+
+    <table id="applicationsTable">
+        <thead>
+            <tr>
+                <th>Όνομα</th>
+                <th>Επίθετο</th>
+                <th>Μ.Ο.</th>
+                <th>% Επιτυχίας</th>
+                <th>Αγγλικά</th>
+                <th>1η Επιλογή</th>
+                <th>2η Επιλογή</th>
+                <th>3η Επιλογή</th>
+                <th>Βαθμολογία</th>
+                <th>Πτυχίο Αγγλικών</th>
+                <th>Άλλα Πτυχία</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Applications will be populated here -->
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchUniversities() {
+            const res = await fetch('/universities');
+            const data = await res.json();
+            const dropdown = document.getElementById("universityFilter");
+            data.forEach(u => {
+                const option = document.createElement("option");
+                option.value = u.id;
+                option.textContent = u.university_name;
+                dropdown.appendChild(option);
+            });
+        }
+
+        async function loadApplications() {
+            const minPercentage = document.getElementById("minPercentage").value;
+            const universityId = document.getElementById("universityFilter").value;
+
+            const res = await fetch(`/admin-applications?min_percentage=${minPercentage}&university_id=${universityId}`);
+            const apps = await res.json();
+
+            const tbody = document.querySelector("#applicationsTable tbody");
+            tbody.innerHTML = "";
+
+            apps.forEach(app => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+            <td>${app.first_name}</td>
+            <td>${app.last_name}</td>
+            <td>${app.average}</td>
+            <td>${app.passed_percentage}</td>
+            <td>${app.english_level}</td>
+            <td>${app.uni1_name}</td>
+            <td>${app.uni2_name}</td>
+            <td>${app.uni3_name}</td>
+            <td><a class="pdf-link" href="/uploads/${app.grades_file}" target="_blank">Προβολή</a></td>
+            <td><a class="pdf-link" href="/uploads/${app.english_certificate_file}" target="_blank">Προβολή</a></td>
+            <td>
+              ${Array.isArray(app.other_certificates_file) && app.other_certificates_file.length > 0
+                        ? app.other_certificates_file.map(f => `<a class='pdf-link' href='/uploads/${f}' target='_blank'>${f}</a>`).join(", ")
+                        : "-"}
+            </td>
+        `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchUniversities();
+            loadApplications();
+        });
+    </script>
+</body>
+
+</html>

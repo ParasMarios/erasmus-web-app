@@ -1,0 +1,57 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 2rem;
+}
+
+h1 {
+    text-align: center;
+    color: #023e8a;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+}
+
+.filters select,
+.filters input {
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 0.8rem;
+    text-align: center;
+}
+
+th {
+    background-color: #0077b6;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f0f8ff;
+}
+
+.pdf-link {
+    text-decoration: none;
+    color: #0077b6;
+    font-weight: bold;
+}
+
+.pdf-link:hover {
+    text-decoration: underline;
+}
