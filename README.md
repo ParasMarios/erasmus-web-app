@@ -51,3 +51,6 @@ npm install
 ```bash
 node server.js 
 ```
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
