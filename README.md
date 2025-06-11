@@ -37,3 +37,15 @@ PostgreSQL
 HTML, CSS, JavaScript
 
 Multer for file uploads
+## Setup Instructions
+1. Clone the Repository
+```bash
+git clone https://github.com/your-repo/erasmapp.git
+cd erasmapp
+```
+2. Install Dependencies
+```bash
+npm install
+```
+3. Run the App
+node server.js 
