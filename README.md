@@ -48,4 +48,6 @@ cd erasmapp
 npm install
 ```
 3. Run the App
+```bash
 node server.js 
+```
