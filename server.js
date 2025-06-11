@@ -22,6 +22,8 @@ app.use(express.static("public")); // για να σερβίρει HTML/CSS/JS
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.post("/register", async (req, res) => {
   const {
     first_name,
